@@ -1,0 +1,121 @@
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id                      String                   @id @default(uuid())
+  username                String                   @unique
+  email                   String                   @unique
+  fullName                String
+  profilePicture          String?
+  bio                     String?
+  createdAt               DateTime                 @default(now())
+  updatedAt               DateTime                 @updatedAt
+  hackathonParticipations HackathonParticipation[]
+  teamMemberships         TeamMember[]            
+}
+
+model Hackathon {
+  id                   String                   @id @default(uuid())
+  name                 String
+  description          String
+  location             String
+  startDate            DateTime
+  endDate              DateTime
+  maxParticipants      Int
+  registrationDeadline DateTime
+  status               HackathonStatus          @default(UPCOMING)
+  createdAt            DateTime                 @default(now())
+  updatedAt            DateTime                 @updatedAt
+  participants         HackathonParticipation[] 
+  teamParticipations   TeamParticipation[]      
+  topics               Topic[]                  
+}
+
+model HackathonParticipation {
+  id          String    @id @default(uuid())
+  userId      String
+  hackathonId String
+  teamParticipationId String?
+  totalScore  Int       @default(0)
+  qrPass      String?   @unique
+  checkedIn   Boolean   @default(false)
+  checkedInAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  hackathon Hackathon @relation(fields: [hackathonId], references: [id], onDelete: Cascade)
+  teamParticipation TeamParticipation? @relation(fields: [teamParticipationId], references: [id], onDelete: SetNull)
+
+  @@unique([userId, hackathonId])
+}
+
+model Team {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  description String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  members            TeamMember[]             
+  teamParticipations TeamParticipation[]      
+}
+
+model TeamParticipation {
+  id          String   @id @default(uuid())
+  teamId      String
+  hackathonId String
+  totalScore  Int      @default(0)
+  qrCode      String?  @unique
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  team      Team      @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  hackathon Hackathon @relation(fields: [hackathonId], references: [id], onDelete: Cascade)
+  participants HackathonParticipation[]
+
+  @@unique([teamId, hackathonId])
+}
+
+model TeamMember {
+  id        String   @id @default(uuid())
+  teamId    String
+  userId    String
+  role      TeamRole
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, teamId])
+}
+
+model Topic {
+  id          String   @id @default(uuid())
+  hackathonId String
+  name        String
+  createdAt   DateTime @default(now())
+
+  hackathon Hackathon @relation(fields: [hackathonId], references: [id], onDelete: Cascade)
+
+  @@unique([hackathonId, name])
+}
+
+enum TeamRole {
+  LEADER
+  MEMBER
+}
+
+enum HackathonStatus {
+  UPCOMING
+  ONGOING
+  FINISHED
+}
