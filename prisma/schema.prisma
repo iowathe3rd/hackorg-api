@@ -9,7 +9,8 @@ generator client {
 }
 
 model User {
-  id                      String                   @id @default(uuid())
+  id                      String                   @unique @default(uuid())
+  clerkId                 String                   @unique 
   username                String                   @unique
   email                   String                   @unique
   fullName                String
@@ -19,6 +20,8 @@ model User {
   updatedAt               DateTime                 @updatedAt
   hackathonParticipations HackathonParticipation[]
   teamMemberships         TeamMember[]            
+
+  @@id([id, clerkId]) 
 }
 
 model Hackathon {

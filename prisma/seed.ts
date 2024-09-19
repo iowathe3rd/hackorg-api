@@ -7,6 +7,7 @@ async function main() {
   // Create Users
   const user1 = await prisma.user.create({
     data: {
+      clerkId: "f1e2d3c4-b5a6-7890-abcd-ef1234567890",
       username: 'johndoe',
       email: 'john@example.com',
       fullName: 'John Doe',
@@ -16,6 +17,7 @@ async function main() {
 
   const user2 = await prisma.user.create({
     data: {
+      clerkId: "f1e2d3c4-b5a6-7890-abcd-ef1234567890",
       username: 'janedoe',
       email: 'jane@example.com',
       fullName: 'Jane Doe',
@@ -25,6 +27,7 @@ async function main() {
 
   const user3 = await prisma.user.create({
     data: {
+      clerkId: "f1e2d3c4-b5a6-7890-abcd-ef1234567890",
       username: 'bobsmith',
       email: 'bob@example.com',
       fullName: 'Bob Smith',
