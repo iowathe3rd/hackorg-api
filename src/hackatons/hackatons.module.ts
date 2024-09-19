@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { HackathonsService } from './hackatons.service';
 import { HackathonsController } from './hackatons.controller';
-import { PrismaService } from 'src/services/prisma.service';
+import { PrismaService } from '../services/prisma.service';
 
 @Module({
   controllers: [HackathonsController],

@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Team, TeamParticipation, User } from '@prisma/client';
-import { PrismaService } from 'src/services/prisma.service';
+import { PrismaService } from '../services/prisma.service';
 import { CreateTeamDto, UpdateTeamDto } from './dto';
 import { isRFC3339 } from 'class-validator';
 

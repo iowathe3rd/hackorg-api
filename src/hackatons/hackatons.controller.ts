@@ -62,4 +62,22 @@ export class HackathonsController {
   async getTeams(@Param('hackathonId') hackathonId: string) {
     return this.hackathonsService.getTeams(hackathonId);
   }
+
+    // Новый метод для получения всех хакатонов
+    @Get()
+    @ApiOperation({ summary: 'Получение всех хакатонов' })
+    @ApiResponse({ status: 200, description: 'Список всех хакатонов.' })
+    @ApiResponse({ status: 500, description: 'Ошибка сервера.' })
+    async getAllHackathons() {
+      return this.hackathonsService.getAllHackathons();
+    }
+  
+    // Новый метод для получения конкретного хакатона
+    @Get(':id')
+    @ApiOperation({ summary: 'Получение хакатона по ID' })
+    @ApiResponse({ status: 200, description: 'Информация о хакатоне.' })
+    @ApiResponse({ status: 404, description: 'Хакатон не найден.' })
+    async getHackathon(@Param('id') id: string) {
+      return this.hackathonsService.getHackathon(id);
+    }
 }

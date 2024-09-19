@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Hackathon, HackathonParticipation, Team, TeamParticipation } from '@prisma/client';
-import { PrismaService } from 'src/services/prisma.service';
+import { PrismaService } from '../services/prisma.service';
 import { AddTeamToHackathonDto, CreateHackathonDto, UpdateHackathonDto } from './dto';
 
 @Injectable()
@@ -95,5 +95,33 @@ export class HackathonsService {
     }
 
     return hackathon.teamParticipations.map(tp => tp.team);
+  }
+
+  async getAllHackathons() {
+    return this.prisma.hackathon.findMany({
+      include: {
+        participants: true,
+        teamParticipations: true,
+        topics: true,
+      },
+    });
+  }
+
+  // Новый метод для получения конкретного хакатона по ID
+  async getHackathon(id: string) {
+    const hackathon = await this.prisma.hackathon.findUnique({
+      where: { id },
+      include: {
+        participants: true,
+        teamParticipations: true,
+        topics: true,
+      },
+    });
+
+    if (!hackathon) {
+      throw new NotFoundException('Hackathon not found.');
+    }
+
+    return hackathon;
   }
 }
