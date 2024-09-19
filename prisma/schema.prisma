@@ -10,7 +10,7 @@ generator client {
 
 model User {
   id                      String                   @unique @default(uuid())
-  clerkId                 String                   @unique 
+  clerkId                 String                   @unique
   username                String                   @unique
   email                   String                   @unique
   fullName                String
@@ -19,9 +19,11 @@ model User {
   createdAt               DateTime                 @default(now())
   updatedAt               DateTime                 @updatedAt
   hackathonParticipations HackathonParticipation[]
-  teamMemberships         TeamMember[]            
+  teamMemberships         TeamMember[]
+  rating                  Int                      @default(0)  // Added field for user rating
+  league                  League                   @default(JUNIOR) // Added field for user league
 
-  @@id([id, clerkId]) 
+  @@id([id, clerkId])
 }
 
 model Hackathon {
@@ -36,25 +38,25 @@ model Hackathon {
   status               HackathonStatus          @default(UPCOMING)
   createdAt            DateTime                 @default(now())
   updatedAt            DateTime                 @updatedAt
-  participants         HackathonParticipation[] 
-  teamParticipations   TeamParticipation[]      
-  topics               Topic[]                  
+  participants         HackathonParticipation[]
+  teamParticipations   TeamParticipation[]
+  topics               Topic[]
 }
 
 model HackathonParticipation {
-  id          String    @id @default(uuid())
-  userId      String
-  hackathonId String
+  id                String   @id @default(uuid())
+  userId            String
+  hackathonId       String
   teamParticipationId String?
-  totalScore  Int       @default(0)
-  qrPass      String?   @unique
-  checkedIn   Boolean   @default(false)
-  checkedInAt DateTime?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  totalScore        Int      @default(0)
+  qrPass            String?  @unique
+  checkedIn         Boolean  @default(false)
+  checkedInAt       DateTime?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
 
-  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  hackathon Hackathon @relation(fields: [hackathonId], references: [id], onDelete: Cascade)
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  hackathon         Hackathon @relation(fields: [hackathonId], references: [id], onDelete: Cascade)
   teamParticipation TeamParticipation? @relation(fields: [teamParticipationId], references: [id], onDelete: SetNull)
 
   @@unique([userId, hackathonId])
@@ -66,23 +68,24 @@ model Team {
   description String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  rating      Int      @default(700) // Added field for team rating
 
-  members            TeamMember[]             
-  teamParticipations TeamParticipation[]      
+  members            TeamMember[]
+  teamParticipations TeamParticipation[]
 }
 
 model TeamParticipation {
-  id          String   @id @default(uuid())
-  teamId      String
-  hackathonId String
-  totalScore  Int      @default(0)
-  qrCode      String?  @unique
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id            String   @id @default(uuid())
+  teamId        String
+  hackathonId   String
+  totalScore    Int      @default(0)
+  qrCode        String?  @unique
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
-  team      Team      @relation(fields: [teamId], references: [id], onDelete: Cascade)
-  hackathon Hackathon @relation(fields: [hackathonId], references: [id], onDelete: Cascade)
-  participants HackathonParticipation[]
+  team          Team      @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  hackathon     Hackathon @relation(fields: [hackathonId], references: [id], onDelete: Cascade)
+  participants  HackathonParticipation[]
 
   @@unique([teamId, hackathonId])
 }
@@ -121,4 +124,13 @@ enum HackathonStatus {
   UPCOMING
   ONGOING
   FINISHED
+}
+
+// Added new enum for leagues
+enum League {
+  JUNIOR
+  STRONG_JUNIOR
+  MIDDLE
+  MIDDLE_PLUS
+  SENIOR
 }

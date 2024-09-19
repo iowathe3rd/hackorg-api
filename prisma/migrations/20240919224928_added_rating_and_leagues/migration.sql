@@ -1,0 +1,9 @@
+-- CreateEnum
+CREATE TYPE "League" AS ENUM ('JUNIOR', 'STRONG_JUNIOR', 'MIDDLE', 'MIDDLE_PLUS', 'SENIOR');
+
+-- AlterTable
+ALTER TABLE "Team" ADD COLUMN     "rating" INTEGER NOT NULL DEFAULT 700;
+
+-- AlterTable
+ALTER TABLE "User" ADD COLUMN     "league" "League" NOT NULL DEFAULT 'JUNIOR',
+ADD COLUMN     "rating" INTEGER NOT NULL DEFAULT 0;
