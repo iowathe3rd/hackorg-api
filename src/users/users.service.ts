@@ -20,7 +20,12 @@ export class UsersService {
   }
 
   async findAll(): Promise<User[]> {
-    return this.prisma.user.findMany();
+    return this.prisma.user.findMany({
+      include: {
+        hackathonParticipations: true,
+        teamMemberships: true
+      }
+    });
   }
 
   async findOne(id: string): Promise<User> {
@@ -28,21 +33,9 @@ export class UsersService {
        where:{
          id 
         },
-        select: {
-          bio: true,
-          clerkId: true,
-          _count: true,
-          createdAt: true,
-          email: true,
-          fullName: true,
-          hackathonParticipations:true, 
-          id: true,
-          league: true,
-          profilePicture: true,
-          rating: true,
-          teamMemberships: true,
-          updatedAt: true,
-          username: true,
+        include: {
+          hackathonParticipations: true,
+          teamMemberships: true
         }
      });
     if (!user) {

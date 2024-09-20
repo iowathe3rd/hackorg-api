@@ -14,11 +14,21 @@ export class HackathonsService {
   }
 
   async findAll(): Promise<Hackathon[]> {
-    return this.prisma.hackathon.findMany();
+    return this.prisma.hackathon.findMany({
+      include: {
+        participants: true,
+        teamParticipations: true,
+        topics: true,
+      },
+    });
   }
 
   async findOne(id: string): Promise<Hackathon> {
-    const hackathon = await this.prisma.hackathon.findUnique({ where: { id } });
+    const hackathon = await this.prisma.hackathon.findUnique({ where: { id },       include: {
+      participants: true,
+      teamParticipations: true,
+      topics: true,
+    }, });
     if (!hackathon) {
       throw new NotFoundException(`Hackathon with id ${id} not found`);
     }
@@ -87,7 +97,11 @@ export class HackathonsService {
   async getTeams(hackathonId: string): Promise<Team[]> {
     const hackathon = await this.prisma.hackathon.findUnique({
       where: { id: hackathonId },
-      include: { teamParticipations: { include: { team: true } } },
+      include: { teamParticipations: { include: {
+        hackathon: true,
+        participants: true,
+        team: true
+      } } },
     });
 
     if (!hackathon) {

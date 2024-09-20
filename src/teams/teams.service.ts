@@ -18,11 +18,19 @@ export class TeamsService {
   }
 
   async findAll(): Promise<Team[]> {
-    return this.prisma.team.findMany();
+    return this.prisma.team.findMany({
+      include: {
+        members: true,
+        teamParticipations: true
+      }
+    });
   }
 
   async findOne(id: string): Promise<Team> {
-    const team = await this.prisma.team.findUnique({ where: { id } });
+    const team = await this.prisma.team.findUnique({ where: { id }, include: {
+      members: true,
+      teamParticipations: true
+    } });
     if (!team) {
       throw new NotFoundException(`Team with id ${id} not found`);
     }
