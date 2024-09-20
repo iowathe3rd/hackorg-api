@@ -31,7 +31,7 @@ model Hackathon {
   name                 String
   description          String
   location             String
-  startDate            DateTime
+  startDate            DateTime                 
   endDate              DateTime
   maxParticipants      Int
   registrationDeadline DateTime

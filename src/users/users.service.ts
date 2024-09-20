@@ -34,8 +34,17 @@ export class UsersService {
          id 
         },
         include: {
-          hackathonParticipations: true,
-          teamMemberships: true
+          hackathonParticipations: {
+            include: {
+              hackathon: true,
+              teamParticipation: true,
+            }
+          },
+          teamMemberships: {
+            include: {
+              team: true
+            }
+          }
         }
      });
     if (!user) {
