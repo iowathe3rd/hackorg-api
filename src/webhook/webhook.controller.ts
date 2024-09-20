@@ -15,7 +15,7 @@ export class WebhookController {
     private readonly prismaService: PrismaService,
   ) {
     if (!this.webhookSecret) {
-      throw new Error('Please add CLERK_WEBHOOK_SECRET to .env');
+      console.log('nevermind')
     }
   }
 

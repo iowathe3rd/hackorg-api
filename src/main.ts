@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import prisma from './lib/db';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -13,6 +14,10 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document, {
     jsonDocumentUrl: "swagger/json"
+  });
+  process.on('SIGINT', async () => {
+    await prisma.$disconnect();
+    process.exit(0);
   });
   await app.listen(4000);
 }

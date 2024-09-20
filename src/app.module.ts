@@ -5,9 +5,10 @@ import { UsersModule } from './users/users.module';
 import { TeamsModule } from './teams/teams.module';
 import { HackatonsModule } from './hackatons/hackatons.module';
 import { WebhookModule } from './webhook/webhook.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [UsersModule, TeamsModule, HackatonsModule, WebhookModule],
+  imports: [ConfigModule.forRoot(), UsersModule, TeamsModule, HackatonsModule, WebhookModule],
   controllers: [AppController],
   providers: [AppService],
 })
