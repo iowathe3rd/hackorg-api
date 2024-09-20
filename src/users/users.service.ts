@@ -6,7 +6,7 @@ import { User } from '@prisma/client';
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   async create(createUserDto: CreateUserDto): Promise<User> {
     try {
@@ -24,13 +24,33 @@ export class UsersService {
   }
 
   async findOne(id: string): Promise<User> {
-    const user = await this.prisma.user.findUnique({ where: { id } });
+    const user = await this.prisma.user.findUnique({
+       where:{
+         id 
+        },
+        select: {
+          bio: true,
+          clerkId: true,
+          _count: true,
+          createdAt: true,
+          email: true,
+          fullName: true,
+          hackathonParticipations:true, 
+          id: true,
+          league: true,
+          profilePicture: true,
+          rating: true,
+          teamMemberships: true,
+          updatedAt: true,
+          username: true,
+        }
+     });
     if (!user) {
       throw new NotFoundException(`User with ID ${id} not found`);
     }
     return user;
   }
-  
+
   async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
     try {
       const user = await this.prisma.user.findUnique({ where: { id } });

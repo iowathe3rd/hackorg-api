@@ -29,6 +29,7 @@ describe('HackathonsService', () => {
     description: 'Test Description',
     createdAt: new Date(),
     updatedAt: new Date(),
+    rating: 3000
   };
 
   const mockTeamParticipation: TeamParticipation = {
